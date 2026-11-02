@@ -1,0 +1,71 @@
+# Harbor example configuration.
+#
+# Copy to configs/harbor.yaml and edit, or pass this file with -config.
+# Environment variables named PROXYMAN_* replace any value here, including
+# an empty value. Durations use Go's format: 30s, 1500ms, 0s.
+
+# demo inserts a fixed pool so the dashboard, the score, and the tests have
+# an opening scene with the network switched off. The addresses are the
+# documentation ranges in RFC 5737. They are not dialed. Set false and point
+# pool.file or pool.url at a list you are allowed to use.
+demo: true
+
+server:
+  # Management API and dashboard.
+  listen: "127.0.0.1:8080"
+  # Local HTTP proxy. Clients use it as their proxy.
+  gateway: "127.0.0.1:8081"
+  # When set, /api requires Authorization: Bearer <token>. The HTML stays open.
+  token: ""
+  read_timeout: 15s
+  write_timeout: 30s
+  shutdown_timeout: 10s
+  # Bounds the handshake to an upstream proxy, not the life of a CONNECT tunnel.
+  gateway_dial_timeout: 15s
+
+pool:
+  # Optional text or JSON list, loaded once at startup.
+  # file: "examples/proxies.example.txt"
+  # Optional http(s) list, fetched at startup. Failures stop the process.
+  # url: "https://example.com/proxies.txt"
+  # Re-fetch pool.url on this interval. 0 disables it. Requires pool.url.
+  refresh_interval: 0s
+
+health:
+  # Fetched through each proxy. Use a URL you are allowed to request.
+  # Each non-demo proxy requests it on the interval below.
+  target: "https://example.com/"
+  # 0 disables the schedule. POST /api/proxies/{id}/check still runs one probe.
+  interval: 30s
+  timeout: 8s
+  concurrency: 8
+  # Samples kept for the success rate and the score.
+  history: 20
+  # Consecutive failures before a proxy leaves rotation.
+  evict_after: 3
+  # Consecutive successes before a dead proxy returns.
+  revive_after: 1
+  # How often a dead proxy is probed again.
+  recheck_interval: 60s
+  # Latency at or above this earns no latency points.
+  latency_budget: 1500ms
+
+geo:
+  # none, static, or http. A lookup failure does not fail the health check.
+  # The key is the proxy host as imported, not the client.
+  provider: none
+  # static_file: "examples/geo.example.json"
+  # http_url: "https://geo.internal/v1/{host}"
+  timeout: 3s
+
+rotation:
+  # round-robin, least-latency, or sticky.
+  strategy: round-robin
+  # Sticky reads this request header, then the client IP.
+  sticky_header: "X-Proxy-Session"
+  # Cap on remembered sticky keys. At the cap the map is dropped.
+  sticky_max: 10000
+
+log:
+  # debug, info, warn, or error.
+  level: info

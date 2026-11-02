@@ -1,0 +1,7 @@
+{
+  "192.0.2.10": {"country": "DE", "region": "Hesse", "city": "Frankfurt"},
+  "192.0.2.11": {"country": "NL", "city": "Amsterdam"},
+  "192.0.2.21": {"country": "US", "region": "Virginia", "city": "Ashburn"},
+  "198.51.100.20": {"country": "SG", "city": "Singapore"},
+  "198.51.100.30": {"country": "GB", "city": "London"}
+}

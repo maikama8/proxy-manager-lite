@@ -1,0 +1,20 @@
+# Example proxy list for Harbor.
+#
+# These addresses are the documentation ranges in RFC 5737. They do not
+# route, and they are here to show the file format. Replace them with proxies
+# you are allowed to use.
+#
+# Accepted lines:
+#   scheme://user:password@host:port
+#   scheme://host:port
+#   user:password@host:port
+#   host:port
+#   host:port:user:password
+# scheme is http, https, socks5, or socks5h. A missing scheme means http.
+# Blank lines and lines starting with # are ignored.
+
+http://192.0.2.10:8080
+https://edge:secret@192.0.2.21:8443
+socks5://svc:secret@198.51.100.20:1080
+192.0.2.11:3128
+198.51.100.30:8080:ops:secret
