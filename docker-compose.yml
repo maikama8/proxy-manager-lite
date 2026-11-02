@@ -1,0 +1,18 @@
+services:
+  harbor:
+    build: .
+    image: harbor:local
+    ports:
+      - "8080:8080"
+      - "8081:8081"
+    environment:
+      # 127.0.0.1 inside the container is not the host. Publish on all interfaces.
+      PROXYMAN_SERVER_LISTEN: "0.0.0.0:8080"
+      PROXYMAN_SERVER_GATEWAY: "0.0.0.0:8081"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:8080/api/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 3s
