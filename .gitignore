@@ -1,0 +1,8 @@
+/bin/
+/harbor
+/configs/harbor.yaml
+coverage.out
+coverage.txt
+*.exe
+.env
+.DS_Store
