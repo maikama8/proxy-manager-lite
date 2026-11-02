@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Harbor</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <rect x="1" y="1" width="30" height="30" rx="7" fill="none" stroke="currentColor" stroke-width="1.5"/>
+        <path d="M6 23h20" stroke="currentColor" stroke-width="1.75" stroke-linecap="round"/>
+        <path d="M8 23V14h5v9M19 23V9h5v14" fill="none" stroke="currentColor" stroke-width="1.75"/>
+        <circle cx="21.5" cy="8" r="1.5" fill="currentColor"/>
+      </svg>
+      <div>
+        <h1>Harbor</h1>
+        <p>Proxy pool, health, and a local gateway</p>
+      </div>
+    </div>
+    <div class="tools">
+      <div class="seg" role="group" aria-label="Rotation strategy">
+        <button type="button" data-strategy="round-robin">Round-robin</button>
+        <button type="button" data-strategy="least-latency">Least latency</button>
+        <button type="button" data-strategy="sticky">Sticky</button>
+      </div>
+      <button type="button" id="theme" class="ghost" aria-pressed="false">Light theme</button>
+    </div>
+  </header>
+
+  <div id="banner" class="banner" hidden></div>
+
+  <section class="kpis" id="kpis" aria-label="Pool summary"></section>
+
+  <main class="layout">
+    <section class="panel">
+      <div class="panel-head">
+        <h2>Pool</h2>
+        <p id="pool-meta"></p>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <caption class="sr-only">Proxies in the pool</caption>
+          <thead>
+            <tr>
+              <th scope="col">Status</th>
+              <th scope="col">Proxy</th>
+              <th scope="col">Latency</th>
+              <th scope="col">Success</th>
+              <th scope="col">Score</th>
+              <th scope="col">Place</th>
+              <th scope="col">Checked</th>
+              <th scope="col"><span class="sr-only">Actions</span></th>
+            </tr>
+          </thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p id="empty" class="empty" hidden>No proxies yet. Paste a list, or set pool.file in the config.</p>
+      <p id="legend" class="legend"></p>
+    </section>
+
+    <aside class="side">
+      <section class="panel">
+        <h2>Gateway</h2>
+        <pre id="curl" class="curl"></pre>
+        <p class="note">Point an HTTP client at the gateway. Harbor picks an upstream that is still in rotation. Demo rows are shown and are not dialed.</p>
+      </section>
+      <section class="panel">
+        <h2>Import</h2>
+        <label class="field" for="import-text">One proxy per line, or JSON</label>
+        <textarea id="import-text" rows="6" spellcheck="false" placeholder="http://192.0.2.10:8080&#10;socks5://user:pass@host:1080"></textarea>
+        <div class="row">
+          <button type="button" id="import-btn" class="primary">Add to pool</button>
+        </div>
+        <p id="import-msg" class="msg" role="status"></p>
+      </section>
+      <p class="fine">Use Harbor only for traffic you are allowed to send: your own services, sites that permit it, tests, and choosing an egress.</p>
+    </aside>
+  </main>
+
+  <footer>
+    <span id="version"></span>
+    <span id="refreshed"></span>
+  </footer>
+
+  <dialog id="token-dialog">
+    <form id="token-form" method="dialog">
+      <h2>API token</h2>
+      <p>This process requires a bearer token before the pool can be read.</p>
+      <label for="token-input">Token</label>
+      <input id="token-input" type="password" autocomplete="current-password" required>
+      <div class="row">
+        <button type="submit" class="primary">Continue</button>
+      </div>
+      <p id="token-msg" class="msg" role="status"></p>
+    </form>
+  </dialog>
+
+  <script src="app.js"></script>
+</body>
+</html>
